@@ -8,7 +8,8 @@ module.exports = {
 };
 
 function getUnavailableSeats(seats = []) {
-    let unavailableSeats = seats.filter((seat) => ['S','R'].indexOf(seat.status) > -1).map((unavailableSeats) => unavailableSeats.rank).sort();
+    let unavailableSeats = seats.filter((seat) => ['S','R'].indexOf(seat.status) > -1).map((unavailableSeats) => unavailableSeats.rank);
+    unavailableSeats.sort(function(a, b){return a-b});
     return unavailableSeats[0] === 0 ? unavailableSeats : [0, ...unavailableSeats, (seats.length + 1)]
 }
 
