@@ -63,16 +63,24 @@ function reserveSeats(seats, numberOfSeats) {
 
 function changeSeatStatus(changeSeats, seats, type) {
     let blocksChanged = [];
-    changeSeats.split(",").forEach((seat) => {
-        let splitSeat = seat.split(/(\d+)/g);
-        if(splitSeat[0] && Number.isInteger(Number(splitSeat[1])) && seats.hasOwnProperty(splitSeat[0]) && seats[splitSeat[0]].seats[Number(splitSeat[1])]) {
-            if(seats[splitSeat[0]].seats[Number(splitSeat[1]) - 1].status === "R"){
-                seats[splitSeat[0]].seats[Number(splitSeat[1]) - 1].status = type;
-                blocksChanged.indexOf(splitSeat[0]) === -1 ? blocksChanged.push(splitSeat[0]) : null;
-            }
-        }
-    });
+    if(changeSeats.search(',') === -1) {
+        statusChange(seats, changeSeats, blocksChanged);
+    } else {
+        changeSeats.split(',').forEach((seat) => {
+            statusChange(seats, seat, blocksChanged, type);
+        });
+    }
     for(let block of blocksChanged) {
         seats[block].unavailableSeats = getUnavailableSeats(seats[block].seats)
+    }
+}
+
+function statusChange(seats, seat, blocksChanged = [], type) {
+    let splitSeat = seat.split(/(\d+)/g);
+    if(splitSeat[0] && Number.isInteger(Number(splitSeat[1])) && seats.hasOwnProperty(splitSeat[0]) && seats[splitSeat[0]].seats[Number(splitSeat[1])]) {
+        if(seats[splitSeat[0]].seats[Number(splitSeat[1]) - 1].status === "R"){
+            seats[splitSeat[0]].seats[Number(splitSeat[1]) - 1].status = type;
+            blocksChanged.indexOf(splitSeat[0]) === -1 ? blocksChanged.push(splitSeat[0]) : null;
+        }
     }
 }
